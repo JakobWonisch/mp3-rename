@@ -51,7 +51,7 @@
             this.panel.RowCount = 2;
             this.panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
             this.panel.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.panel.Size = new System.Drawing.Size(1184, 561);
+            this.panel.Size = new System.Drawing.Size(784, 361);
             this.panel.TabIndex = 0;
             // 
             // toolStrip1
@@ -64,7 +64,7 @@
             this.buttonStop});
             this.toolStrip1.Location = new System.Drawing.Point(0, 0);
             this.toolStrip1.Name = "toolStrip1";
-            this.toolStrip1.Size = new System.Drawing.Size(1184, 25);
+            this.toolStrip1.Size = new System.Drawing.Size(784, 25);
             this.toolStrip1.TabIndex = 0;
             this.toolStrip1.Text = "toolStrip1";
             // 
@@ -112,7 +112,7 @@
             this.listViewFiles.LabelEdit = true;
             this.listViewFiles.Location = new System.Drawing.Point(3, 28);
             this.listViewFiles.Name = "listViewFiles";
-            this.listViewFiles.Size = new System.Drawing.Size(1178, 530);
+            this.listViewFiles.Size = new System.Drawing.Size(778, 330);
             this.listViewFiles.TabIndex = 1;
             this.listViewFiles.UseCompatibleStateImageBehavior = false;
             this.listViewFiles.View = System.Windows.Forms.View.List;
@@ -122,9 +122,9 @@
             // 
             // formRenameFiles
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1184, 561);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.ClientSize = new System.Drawing.Size(784, 361);
             this.Controls.Add(this.panel);
             this.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.Name = "formRenameFiles";

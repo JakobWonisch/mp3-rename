@@ -1,8 +1,9 @@
 ﻿using System;
 using System.IO;
+using System.Runtime.InteropServices;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Microsoft.WindowsAPICodePack.Dialogs;
 using WMPLib;
 
 namespace mp3_rename
@@ -21,6 +22,7 @@ namespace mp3_rename
         }
 
         private string folderPath;
+        private string syncFolder;
         private WindowsMediaPlayer player;
         private bool playing;
 
@@ -96,6 +98,8 @@ namespace mp3_rename
                 }
             }
 
+            SyncFiles();
+
             ReloadFiles();
         }
 
@@ -103,14 +107,14 @@ namespace mp3_rename
         {
             //
             // "Many MP3 players that are based on USB flash drives don't allow you to sort the MP3 files
-            // in the order you want to listen to them. Instead they play the MP3 files in the order they 
+            // in the order you want to listen to them. Instead they play the MP3 files in the order they
             // find them; usually the order you copied them to the flash drive. How do we re-order the files?"
             //
             // https://blogs.msdn.microsoft.com/oldnewthing/20140304-00/?p=1603
             // What order does the DIR command arrange files if no sort order is specified?
             //
-            // "But the easy way out is simply to remove all the files from a directory then move file files 
-            // into the directory in the order you want them enumerated. That way, the first available slot 
+            // "But the easy way out is simply to remove all the files from a directory then move file files
+            // into the directory in the order you want them enumerated. That way, the first available slot
             // is the one at the end of the directory, so the file entry gets appended."
             //
             string tempDir = GetTempDirectory();
@@ -121,7 +125,7 @@ namespace mp3_rename
             var files = Directory.GetFiles(this.folderPath, "*.mp3");
             return IsSorted(files);
         }
-        
+
         /// <summary>
         /// Determines if string array is sorted from A -> Z
         /// </summary>
@@ -166,6 +170,57 @@ namespace mp3_rename
             }
         }
 
+        private void SyncFiles()
+        {
+            string sourceDir = this.folderPath;
+            string destDir = this.syncFolder;
+
+            var sourcesFiles = Directory.GetFiles(sourceDir, "*.mp3");
+            var destFiles = Directory.GetFiles(destDir, "*.mp3");
+
+            //
+            // Remove extra files in destDir
+            //
+            foreach (var destFile in destFiles)
+            {
+                string fileName = Path.GetFileName(destFile);
+                string sourceFile = Path.Combine(sourceDir, fileName);
+                if (!File.Exists(sourceFile))
+                {
+                    File.Delete(destFile);
+                }
+            }
+
+            //
+            // Copy new or updated files from sourceDir
+            //
+            foreach (var sourceFile in sourcesFiles)
+            {
+                string fileName = Path.GetFileName(sourceFile);
+                string destFile = Path.Combine(destDir, fileName);
+                bool copy = false;
+
+                if (!File.Exists(destFile))
+                {
+                    copy = true;
+                }
+                else
+                {
+                    FileInfo f1 = new FileInfo(sourceFile);
+                    FileInfo f2 = new FileInfo(destFile);
+                    if (f1.Length != f2.Length)
+                    {
+                        copy = true;
+                    }
+                }
+
+                if (copy)
+                {
+                    File.Copy(sourceFile, destFile);
+                }
+            }
+        }
+
         private void ReloadFiles()
         {
             listViewFiles.Clear();
@@ -181,21 +236,69 @@ namespace mp3_rename
             StopPlay();
         }
 
+        [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
+        static extern bool GetVolumeInformation(
+            string Volume,
+            StringBuilder VolumeName,
+            uint VolumeNameSize,
+            out uint SerialNumber,
+            out uint SerialNumberLength,
+            out uint flags,
+            StringBuilder fs,
+            uint fs_size);
+
         private void OpenFiles()
         {
-            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
-            dialog.IsFolderPicker = true;
-            if (dialog.ShowDialog() != CommonFileDialogResult.Ok)
+            //
+            // find the first removable drive
+            //
+            string drive = null;
+
+            DriveInfo[] allDrives = DriveInfo.GetDrives();
+            foreach (DriveInfo d in allDrives)
+            {
+                if (d.IsReady && d.DriveType == DriveType.Removable)
+                {
+                    drive = d.Name;
+                    break;
+                }
+            }
+            if (drive == null)
             {
                 return;
             }
-            this.folderPath = dialog.FileName;
+
+            //
+            // get the drive's volume name, serial number
+            //
+            uint serialNum, serialNumLength, flags;
+            StringBuilder volumename = new StringBuilder(256);
+            StringBuilder fstype = new StringBuilder(256);
+
+            bool ok = GetVolumeInformation(drive, volumename,
+                (uint)volumename.Capacity - 1, out serialNum, out serialNumLength,
+                out flags, fstype, (uint)fstype.Capacity - 1);
+            if (!ok)
+            {
+                return;
+            }
+
+            this.folderPath = drive;
+
+            //
+            // sync folder = <my music>\<volume name>\<volume serial number>
+            //
+            string serialNumHexString = serialNum.ToString("X8");
+            string musicFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            this.syncFolder = Path.Combine(musicFolder, volumename.ToString(), serialNumHexString);
+            Directory.CreateDirectory(this.syncFolder);
+            SyncFiles();
 
             Directory.SetCurrentDirectory(this.folderPath);
 
             ReloadFiles();
         }
-        
+
         private void StartPlay()
         {
             var items = listViewFiles.SelectedItems;
@@ -224,7 +327,7 @@ namespace mp3_rename
                 return;
             }
 
-            this.playing = false;            
+            this.playing = false;
             this.player.controls.stop();
         }
 
@@ -237,7 +340,7 @@ namespace mp3_rename
         {
             StartPlay();
         }
-        
+
         private void buttonStop_Click(object sender, EventArgs e)
         {
             StopPlay();

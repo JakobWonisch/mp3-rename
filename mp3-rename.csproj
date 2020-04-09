@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>netcoreapp3.0</TargetFramework>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
     <RootNamespace>mp3_rename</RootNamespace>
     <UseWindowsForms>true</UseWindowsForms>
     <Win32Manifest>Properties\app.manifest</Win32Manifest>

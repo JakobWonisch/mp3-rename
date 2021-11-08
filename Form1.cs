@@ -17,7 +17,20 @@ namespace mp3_rename
             this.playing = false;
             CreateMediaPlayer();
 
+            string[] args = Environment.GetCommandLineArgs();
+            if (args[args.Length - 1] == "-debug") {
+                OpenFiles_Local(); // for local testing
+                return;
+            }
+
             OpenFiles();
+        }
+
+        private void OpenFiles_Local()
+        {
+            this.folderPath = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            Directory.SetCurrentDirectory(this.folderPath);
+            ReloadFiles();
         }
 
         private void CreateMediaPlayer()

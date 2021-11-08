@@ -4,7 +4,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using WMPLib;
 
 namespace mp3_rename
 {
@@ -15,16 +14,23 @@ namespace mp3_rename
             InitializeComponent();
 
             this.Icon = Properties.Resources.shark_ninja_icon;
-            this.player = new WindowsMediaPlayer();
             this.playing = false;
+            CreateMediaPlayer();
 
             OpenFiles();
         }
 
+        private void CreateMediaPlayer()
+        {
+            string progId = "WMPlayer.OCX.7";
+            Type type = Type.GetTypeFromProgID(progId);
+            this.player = Activator.CreateInstance(type);
+        }
+
         private string folderPath;
         private string syncFolder;
-        private WindowsMediaPlayer player;
         private bool playing;
+        private dynamic player;
 
         private void RenameFiles()
         {

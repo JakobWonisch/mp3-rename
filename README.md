@@ -17,6 +17,6 @@ Download a Windows build from one of these links:
 ## Build
 
 1. Fork repo
-1. Open in Visual Studio 2022!
+2. Open in Visual Studio 2022!
   * VS 2019 will not work, because this project requires .NET 6.0.0 which is not supported by default before 2022.
-1. Build -> Publish Selection
+3. Build -> Publish Selection

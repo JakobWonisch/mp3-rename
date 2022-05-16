@@ -11,6 +11,7 @@ namespace mp3_rename
     {
         public formRenameFiles()
         {
+            Console.WriteLine("hi");
             InitializeComponent();
 
             this.Icon = Properties.Resources.shark_ninja_icon;
@@ -59,38 +60,30 @@ namespace mp3_rename
             //  "10 - 太极",
             //  "abc",
             //
-            string prefix = @"^[-= 0-9a-zA-Z]*";
-            Regex reSpecialCase = new Regex(prefix + @"\b([0-9]+[式路套].+)");
+            string prefix = @"^[0-9]* - ";
             Regex reMain = new Regex(prefix + @"(.+)");
 
-            int n = 0;
+            int n = 0,
+                total = listViewFiles.Items.Count;
             bool changed = false;
+
+            int padToZeros = (int) Math.Ceiling(Math.Log10(total));
 
             foreach (ListViewItem item in listViewFiles.Items)
             {
                 var fileName = item.Text;
                 var original = fileName;
                 n ++;
-
-                Match m = reSpecialCase.Match(fileName);
+                
+                Match m = reMain.Match(fileName);
                 if (m.Success)
                 {
+                    // just replace regex
                     fileName = m.Groups[1].Value;
                 }
-                else
-                {
-                    m = reMain.Match(fileName);
-                    if (m.Success)
-                    {
-                        fileName = m.Groups[1].Value;
-                    }
-                    else
-                    {
-                        continue;
-                    }
-                }
+                // otherwise use full filename and add regex
 
-                fileName = n.ToString("D2") + " - " + fileName;
+                fileName = n.ToString("D" + padToZeros) + " - " + fileName;
 
                 if (fileName != original)
                 {
@@ -113,7 +106,8 @@ namespace mp3_rename
                 //
                 if (!RefreshOrdersOnDisk())
                 {
-                    MessageBox.Show("文件没有正确排序", "出错");
+                    //MessageBox.Show("文件没有正确排序", "出错");
+                    MessageBox.Show("The files are not sorted correctly", "error");
                 }
             }
 
@@ -271,45 +265,56 @@ namespace mp3_rename
             //
             // find the first removable drive
             //
-            string drive = null;
+            //string drive = null;
 
-            DriveInfo[] allDrives = DriveInfo.GetDrives();
-            foreach (DriveInfo d in allDrives)
-            {
-                if (d.IsReady && d.DriveType == DriveType.Removable)
-                {
-                    drive = d.Name;
-                    break;
-                }
-            }
-            if (drive == null)
-            {
-                return;
-            }
+            //DriveInfo[] allDrives = DriveInfo.GetDrives();
+            //foreach (DriveInfo d in allDrives)
+            //{
+            //    //if (d.IsReady && d.DriveType == DriveType.Removable)
+            //        if (d.IsReady)
+            //        {
+            //        drive = d.Name;
+            //        break;
+            //    }
+            //}
+            //if (drive == null)
+            //{
+            //    return;
+            //}
 
-            //
-            // get the drive's volume name, serial number
-            //
-            uint serialNum, serialNumLength, flags;
-            StringBuilder volumename = new StringBuilder(256);
-            StringBuilder fstype = new StringBuilder(256);
+            ////
+            //// get the drive's volume name, serial number
+            ////
+            //uint serialNum, serialNumLength, flags;
+            //StringBuilder volumename = new StringBuilder(256);
+            //StringBuilder fstype = new StringBuilder(256);
 
-            bool ok = GetVolumeInformation(drive, volumename,
-                (uint)volumename.Capacity - 1, out serialNum, out serialNumLength,
-                out flags, fstype, (uint)fstype.Capacity - 1);
-            if (!ok)
-            {
-                return;
-            }
+            //bool ok = GetVolumeInformation(drive, volumename,
+            //    (uint)volumename.Capacity - 1, out serialNum, out serialNumLength,
+            //    out flags, fstype, (uint)fstype.Capacity - 1);
+            //if (!ok)
+            //{
+            //    return;
+            //}
 
-            this.folderPath = drive;
+            //this.folderPath = drive;
 
-            //
-            // sync folder = <my music>\<volume name>\<volume serial number>
-            //
-            string serialNumHexString = serialNum.ToString("X8");
-            string musicFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            this.syncFolder = Path.Combine(musicFolder, volumename.ToString(), serialNumHexString);
+            ////
+            //// sync folder = <my music>\<volume name>\<volume serial number>
+            ////
+            //string serialNumHexString = serialNum.ToString("X8");
+            //string musicFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
+            //Console.Write("music folder: " + musicFolder);
+            //this.syncFolder = Path.Combine(musicFolder, volumename.ToString(), serialNumHexString);
+            //Directory.CreateDirectory(this.syncFolder);
+            //SyncFiles();
+
+            //Directory.SetCurrentDirectory(this.folderPath);
+
+            //ReloadFiles();
+
+            this.folderPath = "D:\\Coding\\Other\\mp3rename\\ignore\\test";
+            this.syncFolder = "D:\\Coding\\Other\\mp3rename\\ignore\\test\\sync";
             Directory.CreateDirectory(this.syncFolder);
             SyncFiles();
 

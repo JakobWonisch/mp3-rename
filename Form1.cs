@@ -12,7 +12,6 @@ namespace mp3_rename
     {
         public formRenameFiles()
         {
-            Console.WriteLine("hi");
             InitializeComponent();
 
             this.Icon = Properties.Resources.shark_ninja_icon;
@@ -29,7 +28,7 @@ namespace mp3_rename
             dialog.IsFolderPicker = true;
             if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
             {
-                MessageBox.Show("You selected: " + dialog.FileName);
+                //MessageBox.Show("You selected: " + dialog.FileName);
 
                 //string[] args = Environment.GetCommandLineArgs();
                 //if (args[args.Length - 1] == "-debug") {
@@ -280,61 +279,8 @@ namespace mp3_rename
 
         private void OpenFiles(string folder)
         {
-            //
-            // find the first removable drive
-            //
-            //string drive = null;
-
-            //DriveInfo[] allDrives = DriveInfo.GetDrives();
-            //foreach (DriveInfo d in allDrives)
-            //{
-            //    //if (d.IsReady && d.DriveType == DriveType.Removable)
-            //        if (d.IsReady)
-            //        {
-            //        drive = d.Name;
-            //        break;
-            //    }
-            //}
-            //if (drive == null)
-            //{
-            //    return;
-            //}
-
-            ////
-            //// get the drive's volume name, serial number
-            ////
-            //uint serialNum, serialNumLength, flags;
-            //StringBuilder volumename = new StringBuilder(256);
-            //StringBuilder fstype = new StringBuilder(256);
-
-            //bool ok = GetVolumeInformation(drive, volumename,
-            //    (uint)volumename.Capacity - 1, out serialNum, out serialNumLength,
-            //    out flags, fstype, (uint)fstype.Capacity - 1);
-            //if (!ok)
-            //{
-            //    return;
-            //}
-
-            //this.folderPath = drive;
-
-            ////
-            //// sync folder = <my music>\<volume name>\<volume serial number>
-            ////
-            //string serialNumHexString = serialNum.ToString("X8");
-            //string musicFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyMusic);
-            //Console.Write("music folder: " + musicFolder);
-            //this.syncFolder = Path.Combine(musicFolder, volumename.ToString(), serialNumHexString);
-            //Directory.CreateDirectory(this.syncFolder);
-            //SyncFiles();
-
-            //Directory.SetCurrentDirectory(this.folderPath);
-
-            //ReloadFiles();
-
             this.folderPath = folder;
             this.syncFolder = Path.Combine(folder, "sync");
-            //this.folderPath = "D:\\Coding\\Other\\mp3rename\\ignore\\test";
-            //this.syncFolder = "D:\\Coding\\Other\\mp3rename\\ignore\\test\\sync";
             Directory.CreateDirectory(this.syncFolder);
             SyncFiles();
 

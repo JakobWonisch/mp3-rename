@@ -49,7 +49,7 @@
             this.panel.Location = new System.Drawing.Point(0, 0);
             this.panel.Name = "panel";
             this.panel.RowCount = 2;
-            this.panel.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.AutoSize));
+            this.panel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.panel.RowStyles.Add(new System.Windows.Forms.RowStyle());
             this.panel.Size = new System.Drawing.Size(784, 361);
             this.panel.TabIndex = 0;
@@ -73,8 +73,8 @@
             this.buttonSave.Image = global::mp3_rename.Properties.Resources.Save_16x;
             this.buttonSave.ImageTransparentColor = System.Drawing.Color.Magenta;
             this.buttonSave.Name = "buttonSave";
-            this.buttonSave.Size = new System.Drawing.Size(77, 22);
-            this.buttonSave.Text = "顺序编号";
+            this.buttonSave.Size = new System.Drawing.Size(96, 22);
+            this.buttonSave.Text = "Rename Files";
             this.buttonSave.Click += new System.EventHandler(this.saveToolStripButton_Click);
             // 
             // toolStripSeparator1
@@ -126,7 +126,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(784, 361);
             this.Controls.Add(this.panel);
-            this.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.Font = new System.Drawing.Font("Microsoft YaHei UI", 11.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             this.Name = "formRenameFiles";
             this.Text = "太极伴奏曲";
             this.panel.ResumeLayout(false);

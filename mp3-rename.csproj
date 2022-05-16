@@ -13,6 +13,10 @@
     <SelfContained>false</SelfContained>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
+  </ItemGroup>
+
   <!--
     https://github.com/Microsoft/msbuild/issues/2221
     ResXFileRef is not supported on .net core

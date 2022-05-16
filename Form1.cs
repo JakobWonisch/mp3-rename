@@ -4,6 +4,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Microsoft.WindowsAPICodePack.Dialogs;
 
 namespace mp3_rename
 {
@@ -18,13 +19,30 @@ namespace mp3_rename
             this.playing = false;
             CreateMediaPlayer();
 
-            string[] args = Environment.GetCommandLineArgs();
-            if (args[args.Length - 1] == "-debug") {
-                OpenFiles_Local(); // for local testing
-                return;
-            }
+            PickFolder();
+        }
 
-            OpenFiles();
+        private void PickFolder()
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog();
+            //dialog.InitialDirectory = "C:\\Users";
+            dialog.IsFolderPicker = true;
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+            {
+                MessageBox.Show("You selected: " + dialog.FileName);
+
+                //string[] args = Environment.GetCommandLineArgs();
+                //if (args[args.Length - 1] == "-debug") {
+                //    OpenFiles_Local(); // for local testing
+                //    return;
+                //}
+
+                OpenFiles(dialog.FileName);
+            }
+            else
+            {
+                MessageBox.Show("Did not pick a folder... Restart the program to pick a location.", "error");
+            }
         }
 
         private void OpenFiles_Local()
@@ -260,7 +278,7 @@ namespace mp3_rename
             StringBuilder fs,
             uint fs_size);
 
-        private void OpenFiles()
+        private void OpenFiles(string folder)
         {
             //
             // find the first removable drive
@@ -313,8 +331,10 @@ namespace mp3_rename
 
             //ReloadFiles();
 
-            this.folderPath = "D:\\Coding\\Other\\mp3rename\\ignore\\test";
-            this.syncFolder = "D:\\Coding\\Other\\mp3rename\\ignore\\test\\sync";
+            this.folderPath = folder;
+            this.syncFolder = Path.Combine(folder, "sync");
+            //this.folderPath = "D:\\Coding\\Other\\mp3rename\\ignore\\test";
+            //this.syncFolder = "D:\\Coding\\Other\\mp3rename\\ignore\\test\\sync";
             Directory.CreateDirectory(this.syncFolder);
             SyncFiles();
 

@@ -84,7 +84,7 @@ namespace mp3_rename
                 total = listViewFiles.Items.Count;
             bool changed = false;
 
-            int padToZeros = (int) Math.Ceiling(Math.Log10(total));
+            int padToZeros = (int) Math.Ceiling(Math.Log10(total + 1));
 
             foreach (ListViewItem item in listViewFiles.Items)
             {

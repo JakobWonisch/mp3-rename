@@ -9,9 +9,9 @@ This tool is a graphical interface to drag-and-drop reorder MP3 files in a folde
 
 Download a Windows build from one of these links:
 
-(Last update: 16th of May, 2022)
+(Last update: 26th of May, 2022)
 
-[https://hierwonisch.at/downloads/mp3rename/mp3-rename_0.1.exe](https://hierwonisch.at/downloads/mp3rename/mp3-rename_0.1.exe) (built by [@JakobWonisch](https://github.com/JakobWonisch))
+[https://hierwonisch.at/downloads/mp3rename/mp3-rename_0.1.exe](https://hierwonisch.at/downloads/mp3rename/mp3-rename_0.2.exe) (built by [@JakobWonisch](https://github.com/JakobWonisch))
 
 
 ## Build
